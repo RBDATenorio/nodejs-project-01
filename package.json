@@ -2,10 +2,11 @@
   "name": "webapi-typescript",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
     "dev": "npx nodemon src/server.ts --watch 'src/' -e ts",
-    "compile": "npx tsc",
+    "compile": "npx tsc server.ts",
+    "build": "npx tsc",
     "start": "node dist/server.js"
   },
   "keywords": [],
