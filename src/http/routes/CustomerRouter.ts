@@ -1,16 +1,24 @@
-import express, { Request, Response } from "express";
-import {
-  createCustomer,
-  getCustomers,
-  getCustomerById,
-} from "../controllers/CustomerController";
+import express, { Request, Response, Router } from "express";
+import { CustomerController } from "../controllers/CustomerController";
 
-const customerRouter = express.Router();
+export class CustomerRouter {
+  private router: Router;
+  private customerController: CustomerController;
 
-customerRouter.get("/", getCustomers);
+  constructor(customerController: CustomerController) {
+    this.router = express.Router();
+    this.customerController = customerController;
 
-customerRouter.post("/cadastrar", createCustomer);
+    this.initializeRoutes();
+  }
 
-customerRouter.get("/:id", getCustomerById);
+  getRouter(): Router {
+    return this.router;
+  }
 
-export { customerRouter };
+  private initializeRoutes(): void {
+    this.router.get("/", this.customerController.getCustomers);
+    this.router.post("/cadastrar", this.customerController.createCustomer);
+    this.router.get("/:id", this.customerController.getCustomerById);
+  }
+}

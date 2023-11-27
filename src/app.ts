@@ -1,7 +1,11 @@
 import express, { NextFunction, Request, Response } from "express";
 import morgan from "morgan";
 import helmet from "helmet";
-import { customerRouter } from "./http/routes/CustomerRouter";
+import { CustomerRouter } from "./http/routes/CustomerRouter";
+import { CustomerController } from "./http/controllers/CustomerController";
+import { ICustomerService } from "./services/ICustomerService";
+import { TYPES } from "./IoC/types";
+import container from "./IoC/inversify.config";
 
 const app = express();
 app.use(morgan("tiny"));
@@ -21,7 +25,13 @@ const handleJSONSyntaxError = (
   }
 };
 
-app.use("/customer", customerRouter);
+const customerController = new CustomerController(
+  container.get<ICustomerService>(TYPES.CustomerService)
+);
+
+const customerRouter = new CustomerRouter(customerController);
+
+app.use("/customer", customerRouter.getRouter());
 
 app.use(handleJSONSyntaxError);
 
